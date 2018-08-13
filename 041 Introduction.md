@@ -70,3 +70,37 @@ Linux基金会在2015年建立Hyperledger项目来推行跨行业区块链技术
 
 Hyperledger Fabric 是Hyperledger的其中一个区块链项目。和其他区块链技术一样，它有一个账本，使用智能合约，并且是一个参与者管理自己的交易的系统。
 
+Hyperledger Fabric 区别于其他区块链在于它是private 和 permissioned。而不是一个开放的非许可的系统允许未知身份在网络中参与（需要“工作证明”之类的协议来验证事务并保护网络），超分类帐织物网络的成员通过可信的会员服务提供商(MSP)注册。
+
+Hyperledger Fabric同样提供几个可插入选项。Ledger数据可以被存储在多个标准化，协商一致的机制可以交换进来和出去，并且支持不同的MSP。
+
+Hyperledger Fabric 也提供创建channel的功能来允许一组参与者来分开创建ledger的交易。这是一个尤其重要的关于在网络一些参与者可能是竞争者或者不想任何的它们造成的交易——一个特别的价钱指定给一些参与者，例如——知道每个参与者。如果两个参与者来自同一个channel，那么其他的参与者没人能copy关于这个channel的ledger。
+
+### 共享的Ledger
+
+Hyperledger Fabric有一个ledger子系统包括两个部分：world state和transaction log.每个参与者都有一个它们所属的Hyperledger Fabric网络的ledger拷贝。
+
+world state组件描述ledger的状态在给定一个时间点。这是ledger的数据库。transaction log组件记录所有的导致world state产生作用的交易。
+
+ledger有一个可代替的关于world状态的数据存储。默认，这是一个LevelDB键值存储数据。交易日志不需要是插件式的。它只记录区块链网络使用的分类数据库的前后值。
+
+### 智能合约
+
+Hyperledger Fabric智能合约是由chaincode编写并且通过区块链外部程序调用当这个应用需要和ledger交互。在大多数情况下,chaincode仅和分账数据库,world状态(例如查询它)交互，不和transaction log.
+
+Chaincode可以通过多种编程语言来实现。现阶段,Go和Node都支持了。
+
+### 隐私
+
+根据网关的需要，企业对企业(B2B)网络的参与者可能对他们共享的信息非常敏感。对于其他网络来说，隐私可能不是首要问题。
+
+Hyperledger Fabric支持网络隐私(使用通道)是一个关键的操作需求，以及相对开放的网络。
+
+### 共识
+
+交易必须被写到ledger中以他们发生的顺序，甚至他们可能在多个网络中不同的参与者之中。为了实现这个目标，交易的顺序必须是既定的并且必须采用一种方法来拒绝错误地(或恶意地)插入到分类账中的不良交易。
+
+这是一个深入研究计算机科学的领域，并且有很多种方式来实现它，每种都有不同的权衡。例如，PBFT(Practical Byzantine Fault Tolerance实际拜占庭容错)可以提供一种机制，让文件副本相互通信，以保持每个副本的一致性。或者，在比特币中，排序是通过一种被称为“挖掘”的过程进行的，在这种过程中，相互竞争的计算机竞相解决一个密码难题，这个难题定义了所有进程随后所建立的顺序。
+
+Hyperledger Fabric已经被设计来允许网络初学者选择一个最能代表参与者之间存在关系的共识机制。和隐私一样，这里也有不同的需求；从关系高度结构化的网络到更对等的网络。
+
